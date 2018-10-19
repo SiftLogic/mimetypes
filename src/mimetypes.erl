@@ -20,6 +20,7 @@
 -define(SERVER, ?MODULE). 
 -define(MAPMOD, mimetypes_map).
 -define(DISPMOD, mimetypes_disp).
+-define(COMPILE_OPTS, [debug_info]).
 
 -type erlang_form() :: term().
 -type compile_options() :: [term()].
@@ -334,7 +335,7 @@ extract_extensions([{Type, Exts}|Rest]) ->
 -spec load_mapping(atom(), [{binary(), binary()}]) -> ok.
 load_mapping(Module, Pairs) ->
     AbsCode = map_to_abstract(Module, Pairs),
-    {ok, Module, Binary} = compile_forms(AbsCode, []),
+    {ok, Module, Binary} = compile_forms(AbsCode, ?COMPILE_OPTS),
     ok = load_binary(Module, Binary).
 
 %% @private Write a list of mimetype-extension pairs.
@@ -343,7 +344,7 @@ load_mapping(Module, Pairs) ->
 -spec write_mapping(atom(), [{binary(), binary()}]) -> ok.
 write_mapping(Module, Pairs) ->
     AbsCode = map_to_abstract(Module, Pairs),
-    {ok, Module, Binary} = compile_forms(AbsCode, []),
+    {ok, Module, Binary} = compile_forms(AbsCode, ?COMPILE_OPTS),
     ok = write_binary(Module, Binary),
     ok = load_binary(Module, Binary).
 
@@ -352,7 +353,7 @@ write_mapping(Module, Pairs) ->
 load_dispatch(Pairs) ->
     Module = ?DISPMOD,
     AbsCode = disp_to_abstract(Module, Pairs),
-    {ok, Module, Binary} = compile_forms(AbsCode, []),
+    {ok, Module, Binary} = compile_forms(AbsCode, ?COMPILE_OPTS),
     ok = load_binary(Module, Binary).
 
 %% @private Write a list of database-module pairs.
@@ -360,7 +361,7 @@ load_dispatch(Pairs) ->
 write_dispatch(Pairs) ->
     Module = ?DISPMOD,
     AbsCode = disp_to_abstract(Module, Pairs),
-    {ok, Module, Binary} = compile_forms(AbsCode, []),
+    {ok, Module, Binary} = compile_forms(AbsCode, ?COMPILE_OPTS),
     ok = write_binary(Module, Binary),
     ok = load_binary(Module, Binary).
 
